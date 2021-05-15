@@ -88,3 +88,8 @@ endif()
 
 # Put in a "bgfx" folder in Visual Studio
 set_target_properties( bx PROPERTIES FOLDER "bgfx" )
+
+# Android required libraries
+if (ANDROID)
+	target_link_libraries( bx PUBLIC android log )
+endif()
