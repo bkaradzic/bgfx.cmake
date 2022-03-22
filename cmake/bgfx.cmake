@@ -40,7 +40,8 @@ else()
 endif()
 
 # Create the bgfx target
-if(BGFX_LIBRARY_TYPE STREQUAL STATIC)
+string( TOLOWER "${BGFX_LIBRARY_TYPE}" BGFX_LIBRARY_TYPE)
+if(BGFX_LIBRARY_TYPE STREQUAL static)
     add_library( bgfx STATIC ${BGFX_SOURCES} )
 else()
     add_library( bgfx SHARED ${BGFX_SOURCES} )
