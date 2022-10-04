@@ -41,19 +41,19 @@ endif()
 
 # Create the bgfx target
 if(BGFX_LIBRARY_TYPE STREQUAL STATIC)
-    add_library( bgfx STATIC ${BGFX_SOURCES} )
+	add_library( bgfx STATIC ${BGFX_SOURCES} )
 else()
-    add_library( bgfx SHARED ${BGFX_SOURCES} )
+	add_library( bgfx SHARED ${BGFX_SOURCES} )
 endif()
 
 if(BGFX_CONFIG_RENDERER_WEBGPU)
-    include(${CMAKE_CURRENT_LIST_DIR}/3rdparty/webgpu.cmake)
-    target_compile_definitions( bgfx PRIVATE BGFX_CONFIG_RENDERER_WEBGPU=1)
-    if (EMSCRIPTEN)
-        target_link_options(bgfx PRIVATE "-s USE_WEBGPU=1")
-    else()
-        target_link_libraries(bgfx PRIVATE webgpu)
-    endif()
+	include(${CMAKE_CURRENT_LIST_DIR}/3rdparty/webgpu.cmake)
+	target_compile_definitions( bgfx PRIVATE BGFX_CONFIG_RENDERER_WEBGPU=1)
+	if (EMSCRIPTEN)
+		target_link_options(bgfx PRIVATE "-s USE_WEBGPU=1")
+	else()
+		target_link_libraries(bgfx PRIVATE webgpu)
+	endif()
 endif()
 
 if(EMSCRIPTEN)
@@ -75,20 +75,27 @@ endif()
 
 # Add debug config required in bx headers since bx is private
 target_compile_definitions(bgfx
-       PUBLIC
-               "BX_CONFIG_DEBUG=$<IF:$<CONFIG:Debug>,1,$<BOOL:${BX_CONFIG_DEBUG}>>"
-               "BGFX_CONFIG_MULTITHREADED=$<BOOL:${BGFX_CONFIG_MULTITHREADED}>"
+	   PUBLIC
+			   "BX_CONFIG_DEBUG=$<IF:$<CONFIG:Debug>,1,$<BOOL:${BX_CONFIG_DEBUG}>>"
+			   "BGFX_CONFIG_MULTITHREADED=$<BOOL:${BGFX_CONFIG_MULTITHREADED}>"
 )
 
 # Includes
 target_include_directories( bgfx
 	PRIVATE
 		${BGFX_DIR}/3rdparty
-		${BGFX_DIR}/3rdparty/dxsdk/include
+		${BGFX_DIR}/3rdparty/directx-headers/include/directx
 		${BGFX_DIR}/3rdparty/khronos
 	PUBLIC
 		$<BUILD_INTERFACE:${BGFX_DIR}/include>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+if( UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND NOT ANDROID )
+	target_include_directories( bgfx
+		PRIVATE
+			${BGFX_DIR}/3rdparty/directx-headers/include
+			${BGFX_DIR}/3rdparty/directx-headers/include/wsl/stubs)
+endif()
 
 # bgfx depends on bx and bimg
 target_link_libraries( bgfx PRIVATE bx bimg )
