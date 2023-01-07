@@ -22,7 +22,7 @@ if(APPLE AND NOT XCODE)
 endif()
 
 if(MSVC AND (MSVC_VERSION GREATER_EQUAL 1914))
-	add_compile_options("/Zc:__cplusplus")
+  add_compile_options("/Zc:__cplusplus")
 endif()
 
 option(BX_AMALGAMATED "Amalgamated bx build for faster compilation" OFF)
