@@ -8,7 +8,16 @@
 # You should have received a copy of the CC0 Public Domain Dedication along with
 # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-include(3rdparty/miniz.cmake)
-include(bimg.cmake)
-include(bimg_decode.cmake)
-include(bimg_encode.cmake)
+# Ensure the directory exists
+if(NOT IS_DIRECTORY ${BIMG_DIR})
+	message(SEND_ERROR "Could not load bimg, directory does not exist. ${BIMG_DIR}")
+	return()
+endif()
+
+if(NOT MINIZ_LIBRARIES)
+	file(GLOB_RECURSE #
+		 MINIZ_SOURCES #
+		 ${BIMG_DIR}/3rdparty/tinyexr/deps/miniz/miniz.* #
+	)
+	set(MINIZ_INCLUDE_DIR ${BIMG_DIR}/3rdparty/tinyexr/deps/miniz)
+endif()
