@@ -8,16 +8,19 @@
 # You should have received a copy of the CC0 Public Domain Dedication along with
 # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-include(bgfx.cmake)
-include(3rdparty/meshoptimizer.cmake)
-include(3rdparty/dear-imgui.cmake)
-
-include(examples.cmake)
-
-if(BGFX_BUILD_TOOLS_TEXTURE)
-	include(texturev.cmake)
+# Ensure the directory exists
+if(NOT IS_DIRECTORY ${BGFX_DIR})
+	message(SEND_ERROR "Could not load bgfx, directory does not exist. ${BGFX_DIR}")
+	return()
 endif()
-if(BGFX_BUILD_TOOLS_GEOMETRY)
-	include(geometryc.cmake)
-	include(geometryv.cmake)
+
+if(NOT DEAR_IMGUI_LIBRARIES)
+	file(
+		GLOB #
+		DEAR_IMGUI_SOURCES #
+		${BGFX_DIR}/3rdparty/dear-imgui/*.cpp #
+		${BGFX_DIR}/3rdparty/dear-imgui/*.h #
+		${BGFX_DIR}/3rdparty/dear-imgui/*.inl #
+	)
+	set(DEAR_IMGUI_INCLUDE_DIR ${BGFX_DIR}/3rdparty)
 endif()
