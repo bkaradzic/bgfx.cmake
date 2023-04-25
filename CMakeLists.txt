@@ -93,11 +93,7 @@ if(NOT BX_DIR)
 		set(BX_GIT_TAG fa1411e4aa111c8b004c97660ab31ba1a5287835)
 	endif()
 
-	FetchContent_Declare(
-			bx
-			GIT_REPOSITORY ${BX_GIT_REPOSITORY}
-			GIT_TAG ${BX_GIT_TAG}
-	)
+	FetchContent_Declare(bx GIT_REPOSITORY ${BX_GIT_REPOSITORY} GIT_TAG ${BX_GIT_TAG})
 
 	FetchContent_Populate(bx)
 
@@ -116,11 +112,7 @@ if(NOT BIMG_DIR)
 		set(BIMG_GIT_TAG 7afa2419254fd466c013a51bdeb0bee3022619c4)
 	endif()
 
-	FetchContent_Declare(
-			bimg
-			GIT_REPOSITORY ${BIMG_GIT_REPOSITORY}
-			GIT_TAG ${BIMG_GIT_TAG}
-	)
+	FetchContent_Declare(bimg GIT_REPOSITORY ${BIMG_GIT_REPOSITORY} GIT_TAG ${BIMG_GIT_TAG})
 
 	FetchContent_Populate(bimg)
 
@@ -139,11 +131,7 @@ if(NOT BGFX_DIR)
 		set(BGFX_GIT_TAG 6f36b4fb3a0d76090eb2727ecf11abac46eef8aa)
 	endif()
 
-	FetchContent_Declare(
-			bgfx
-			GIT_REPOSITORY ${BGFX_GIT_REPOSITORY}
-			GIT_TAG ${BGFX_GIT_TAG}
-	)
+	FetchContent_Declare(bgfx GIT_REPOSITORY ${BGFX_GIT_REPOSITORY} GIT_TAG ${BGFX_GIT_TAG})
 
 	FetchContent_Populate(bgfx)
 
