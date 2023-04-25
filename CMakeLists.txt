@@ -93,6 +93,8 @@ if(NOT BX_DIR)
 		set(BX_GIT_TAG fa1411e4aa111c8b004c97660ab31ba1a5287835)
 	endif()
 
+	message(STATUS "Using bx git repository ${BX_GIT_REPOSITORY}:${BX_GIT_TAG}")
+
 	FetchContent_Declare(bx GIT_REPOSITORY ${BX_GIT_REPOSITORY} GIT_TAG ${BX_GIT_TAG})
 
 	FetchContent_Populate(bx)
@@ -116,6 +118,8 @@ if(NOT BIMG_DIR)
 
 	FetchContent_Populate(bimg)
 
+	message(STATUS "Using bimg git repository ${BIMG_GIT_REPOSITORY}:${BIMG_GIT_TAG}")
+
 	if(bimg_POPULATED)
 		set(BIMG_DIR "${bimg_SOURCE_DIR}" CACHE STRING "Location of bimg.")
 	endif()
@@ -130,6 +134,8 @@ if(NOT BGFX_DIR)
 	if(NOT BGFX_GIT_TAG)
 		set(BGFX_GIT_TAG 6f36b4fb3a0d76090eb2727ecf11abac46eef8aa)
 	endif()
+
+	message(STATUS "Using bgfx git repository ${BGFX_GIT_REPOSITORY}:${BGFX_GIT_TAG}")
 
 	FetchContent_Declare(bgfx GIT_REPOSITORY ${BGFX_GIT_REPOSITORY} GIT_TAG ${BGFX_GIT_TAG})
 
