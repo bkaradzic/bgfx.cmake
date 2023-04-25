@@ -78,18 +78,78 @@ if(BGFX_BUILD_TESTS)
 	enable_testing()
 endif()
 
+include(FetchContent)
+
+#[[ Setting *_GIT_REPOSITORY and *_GIT_TAG variables would allow you to choose between different repositories and/or
+    tags to be used in the build process instead of the originally targeted ones.
+    Those could be forks or in-development features that are desirable to be tested using the CMake build system ]]
+
 if(NOT BX_DIR)
-	set(BX_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bx" CACHE STRING "Location of bx.")
+	if (NOT BX_GIT_REPOSITORY)
+		set(BX_GIT_REPOSITORY https://github.com/bkaradzic/bx.git)
+	endif()
+
+	if (NOT BX_GIT_TAG)
+		set(BX_GIT_TAG fa1411e4aa111c8b004c97660ab31ba1a5287835)
+	endif()
+
+	FetchContent_Declare(
+			bx
+			GIT_REPOSITORY ${BX_GIT_REPOSITORY}
+			GIT_TAG ${BX_GIT_TAG}
+	)
+
+	FetchContent_Populate(bx)
+
+	if (bx_POPULATED)
+		set(BX_DIR "${bx_SOURCE_DIR}" CACHE STRING "Location of bx.")
+	endif()
 elseif(NOT IS_ABSOLUTE "${BX_DIR}")
 	get_filename_component(BX_DIR "${BX_DIR}" REALPATH BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 if(NOT BIMG_DIR)
-	set(BIMG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bimg" CACHE STRING "Location of bimg.")
+	if (NOT BIMG_GIT_REPOSITORY)
+		set(BIMG_GIT_REPOSITORY https://github.com/bkaradzic/bimg.git)
+	endif()
+
+	if (NOT BIMG_GIT_TAG)
+		set(BIMG_GIT_TAG 7afa2419254fd466c013a51bdeb0bee3022619c4)
+	endif()
+
+	FetchContent_Declare(
+			bimg
+			GIT_REPOSITORY ${BIMG_GIT_REPOSITORY}
+			GIT_TAG ${BIMG_GIT_TAG}
+	)
+
+	FetchContent_Populate(bimg)
+
+	if (bimg_POPULATED)
+		set(BIMG_DIR "${bimg_SOURCE_DIR}" CACHE STRING "Location of bimg.")
+	endif()
 elseif(NOT IS_ABSOLUTE "${BIMG_DIR}")
 	get_filename_component(BIMG_DIR "${BIMG_DIR}" REALPATH BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 if(NOT BGFX_DIR)
-	set(BGFX_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bgfx" CACHE STRING "Location of bgfx.")
+	if (NOT BGFX_GIT_REPOSITORY)
+		set(BGFX_GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git)
+	endif()
+
+	if (NOT BGFX_GIT_TAG)
+		set(BGFX_GIT_TAG 6f36b4fb3a0d76090eb2727ecf11abac46eef8aa)
+	endif()
+
+	FetchContent_Declare(
+			bgfx
+			GIT_REPOSITORY ${BGFX_GIT_REPOSITORY}
+			GIT_TAG ${BGFX_GIT_TAG}
+	)
+
+	FetchContent_Populate(bgfx)
+
+	if (bgfx_POPULATED)
+		set(BGFX_DIR "${bgfx_SOURCE_DIR}" CACHE STRING "Location of bgfx.")
+	endif()
 elseif(NOT IS_ABSOLUTE "${BGFX_DIR}")
 	get_filename_component(BGFX_DIR "${BGFX_DIR}" REALPATH BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
