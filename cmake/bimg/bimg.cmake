@@ -25,8 +25,6 @@ file(
 	${MINIZ_SOURCES}
 )
 
-message("BIMG SRCs : ${BIMG_SOURCES}")
-
 add_library(bimg STATIC ${BIMG_SOURCES})
 
 # Put in a "bgfx" folder in Visual Studio
