@@ -18,12 +18,14 @@ file(
 	GLOB_RECURSE
 	BIMG_SOURCES
 	${BIMG_DIR}/include/* #
-	${BIMG_DIR}/src/image.* #
-	${BIMG_DIR}/src/image_gnf.cpp #
-	#
+	${BIMG_DIR}/src/*.cpp #
+	${BIMG_DIR}/src/bimg_p.h #
+	${BIMG_DIR}/src/config.h #
 	${ASTC_ENCODER_SOURCES}
 	${MINIZ_SOURCES}
 )
+
+message("BIMG SRCs : ${BIMG_SOURCES}")
 
 add_library(bimg STATIC ${BIMG_SOURCES})
 
@@ -34,6 +36,8 @@ target_include_directories(
 	bimg PUBLIC $<BUILD_INTERFACE:${BIMG_DIR}/include>$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 	PRIVATE ${ASTC_ENCODER_INCLUDE_DIR} #
 			${MINIZ_INCLUDE_DIR} #
+			${BIMG_DIR}/3rdparty/ #
+			${BIMG_DIR}/3rdparty/iqa/include/
 )
 
 target_link_libraries(
