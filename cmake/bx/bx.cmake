@@ -27,6 +27,8 @@ file(
 )
 
 if(BX_AMALGAMATED)
+	file(GLOB_RECURSE BX_NOBUILD "${BX_DIR}/src/amalgamated.*")
+else()
 	list(APPEND BX_NOBUILD "${BX_DIR}/src/allocator.cpp")
 	list(APPEND BX_NOBUILD "${BX_DIR}/src/bounds.cpp")
 	list(APPEND BX_NOBUILD "${BX_DIR}/src/bx.cpp")
@@ -49,8 +51,6 @@ if(BX_AMALGAMATED)
 	list(APPEND BX_NOBUILD "${BX_DIR}/src/thread.cpp")
 	list(APPEND BX_NOBUILD "${BX_DIR}/src/timer.cpp")
 	list(APPEND BX_NOBUILD "${BX_DIR}/src/url.cpp")
-else()
-	file(GLOB_RECURSE BX_NOBUILD "${BX_DIR}/src/amalgamated.*")
 endif()
 
 # Exclude files from the build but keep them in project
