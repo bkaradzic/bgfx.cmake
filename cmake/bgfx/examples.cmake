@@ -136,7 +136,7 @@ function(add_example ARG_NAME)
 		target_link_libraries(
 			example-${ARG_NAME} PUBLIC bgfx bx bimg bimg_decode ${DEAR_IMGUI_LIBRARIES} ${MESHOPTIMIZER_LIBRARIES}
 		)
-    
+
 		if(BGFX_WITH_WAYLAND)
 			target_compile_definitions(example-${ARG_NAME} PUBLIC ENTRY_CONFIG_USE_WAYLAND=1)
 		endif()
