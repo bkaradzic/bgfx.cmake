@@ -597,7 +597,7 @@ if(TARGET bgfx::shaderc)
 			set(PLATFORM WINDOWS)
 			list(APPEND PROFILES s_4_0)
 			list(APPEND PROFILES s_5_0)
-		elseif(ORBIS)   # ORBIS should be defined by a PS4 CMake toolchain
+		elseif(ORBIS) # ORBIS should be defined by a PS4 CMake toolchain
 			set(PLATFORM ORBIS)
 			list(APPEND PROFILES pssl)
 		else()
