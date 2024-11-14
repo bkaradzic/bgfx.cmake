@@ -576,7 +576,7 @@ if(TARGET bgfx::shaderc)
 		cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" "${ARGN}")
 
 		set(PROFILES 120 300_es spirv)
-		if (IOS)
+		if(IOS)
 			set(PLATFORM IOS)
 			list(APPEND PROFILES metal)
 		elseif(ANDROID)
