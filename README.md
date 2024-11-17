@@ -45,6 +45,8 @@ This defines a bin2c command to generate a specified `OUTPUT_FILE` header with a
 
 Adding these `INPUT_FILE` as source files to a target will run `bin2c` at build time and they will rebuild if either the contents of the `INPUT_FILE` change.
 
+Logs generated from compilation will be located in the `bgfx_tool_logs` directory within the build folder.
+
 #### Examples: Generating an image as a header
 ```cmake
 bgfx_compile_binary_to_header(
@@ -86,6 +88,31 @@ bgfx_compile_texture(
 )
 ```
 
+Logs generated from compilation will be located in the `bgfx_tool_logs` directory within the build folder.
+
+### `bgfx_compile_geometry`
+Add a build rule for a geometry to the generated build system be compiled using geometryc.
+```cmake
+bgfx_compile_geometry(
+     FILE filename
+     OUTPUT filename
+     [SCALE scale]
+     [CCW]
+     [FLIPV]
+     [OBB num steps]
+     [PACKNORMAL 0|1]
+     [PACKUV 0|1]
+     [TANGENT]
+     [BARYCENTRIC]
+     [COMPRESS]
+     [LH_UP_Y|LH_UP_Z|RH_UP_Y|RH_UP_Z]
+)
+
+```
+
+Logs generated from compilation will be located in the `bgfx_tool_logs` directory within the build folder.
+
+
 ### `bgfx_compile_shaders`
 Add a build rule for a `*.sc` shader to the generated build system using shaderc.
 ```cmake
@@ -102,6 +129,8 @@ This defines a shaderc command to generate binaries or headers for a number of `
 The generated headers will have names in the format of `${RENDERING_API}/${SHADERS}.bin[.h]` where `RENDERING_API` can be `glsl`, `essl`, `spv`, `dx11` and `mtl` depending on the availability of the platform.
 
 Adding these `SHADERS` as source files to a target will run `shaderc` at build time and they will rebuild if either the contents of the `SHADERS` or the `VARYING_DEF` change.
+
+Logs generated from compilation will be located in the `bgfx_tool_logs` directory within the build folder.
 
 #### Examples: Generating shaders as headers
 ```cmake
