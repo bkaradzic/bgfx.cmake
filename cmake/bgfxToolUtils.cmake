@@ -55,11 +55,28 @@ if(TARGET bgfx::bin2c)
 			OUTPUT_FILE ${ARG_OUTPUT_FILE}
 			ARRAY_NAME ${ARG_ARRAY_NAME}
 		)
+
+        get_filename_component(OUTPUT_DIR "${ARG_OUTPUT_FILE}" DIRECTORY)
+        file(MAKE_DIRECTORY ${OUTPUT_DIR}) # create output path if it does not exist
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bgfx_tool_logs) # create log path if it does not exist
+        file(RELATIVE_PATH INPUT_FILE_RELATIVE ${CMAKE_BINARY_DIR} ${ARG_INPUT_FILE})
+        file(RELATIVE_PATH OUTPUT_FILE_RELATIVE ${CMAKE_BINARY_DIR} ${ARG_OUTPUT_FILE})
+
+        string(REPLACE " " "_"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${OUTPUT_FILE_RELATIVE})
+        string(REPLACE "/" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH})
+        string(REPLACE "\\" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH}) # probably need this for windows
+
 		add_custom_command(
 			OUTPUT ${ARG_OUTPUT_FILE} #
-			COMMAND bgfx::bin2c ${CLI} #
+			COMMAND bgfx::bin2c ${CLI} > bgfx_tool_logs/binary_to_header_compile_output_${FILE_NAME_APPROPRIATE_OUTPUT_PATH}.log #
+            COMMENT "Compiling ${INPUT_FILE_RELATIVE} as header" #
 			MAIN_DEPENDENCY ${ARG_INPUT_FILE} #
 		)
+
+        add_custom_target(
+            ${FILE_NAME_APPROPRIATE_OUTPUT_PATH} ALL #
+             DEPENDS ${ARG_OUTPUT_FILE} #
+        )
 	endfunction()
 endif()
 
@@ -212,11 +229,28 @@ if(TARGET bgfx::texturec)
 			${ARGN} #
 		)
 		_bgfx_texturec_parse(CLI ${ARGV})
+
+        get_filename_component(OUTPUT_DIR "${ARG_OUTPUT}" DIRECTORY)
+        file(MAKE_DIRECTORY ${OUTPUT_DIR}) # create output path if it does not exist
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bgfx_tool_logs) # create log path if it does not exist
+        file(RELATIVE_PATH INPUT_FILE_RELATIVE ${CMAKE_BINARY_DIR} ${ARG_FILE})
+        file(RELATIVE_PATH OUTPUT_FILE_RELATIVE ${CMAKE_BINARY_DIR} ${ARG_OUTPUT})
+
+        string(REPLACE " " "_"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${OUTPUT_FILE_RELATIVE})
+        string(REPLACE "/" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH})
+        string(REPLACE "\\" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH}) # probably need this for windows
+
 		add_custom_command(
 			OUTPUT ${ARG_OUTPUT} #
-			COMMAND bgfx::texturec ${CLI} #
+			COMMAND bgfx::texturec ${CLI} > bgfx_tool_logs/texture_compile_output_${FILE_NAME_APPROPRIATE_OUTPUT_PATH}.log #
+            COMMENT "Compiling ${INPUT_FILE_RELATIVE}" #
 			MAIN_DEPENDENCY ${ARG_FILE} #
 		)
+
+        add_custom_target(
+             ${FILE_NAME_APPROPRIATE_OUTPUT_PATH} ALL #
+             DEPENDS ${ARG_OUTPUT} #
+        )
 	endfunction()
 endif()
 
@@ -349,11 +383,28 @@ if(TARGET bgfx::geometryc)
 			${ARGN} #
 		)
 		_bgfx_geometryc_parse(CLI ${ARGV})
+
+        get_filename_component(OUTPUT_DIR "${ARG_OUTPUT}" DIRECTORY)
+        file(MAKE_DIRECTORY ${OUTPUT_DIR}) # create output path if it does not exist
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bgfx_tool_logs) # create log path if it does not exist
+        file(RELATIVE_PATH INPUT_FILE_RELATIVE ${CMAKE_BINARY_DIR} ${ARG_FILE})
+        file(RELATIVE_PATH OUTPUT_FILE_RELATIVE ${CMAKE_BINARY_DIR} ${ARG_OUTPUT})
+
+        string(REPLACE " " "_"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${OUTPUT_FILE_RELATIVE})
+        string(REPLACE "/" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH})
+        string(REPLACE "\\" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH}) # probably need this for windows
+
 		add_custom_command(
 			OUTPUT ${ARG_OUTPUT} #
-			COMMAND bgfx::geometryc ${CLI} #
+			COMMAND bgfx::geometryc ${CLI} > bgfx_tool_logs/geometry_compile_output_${FILE_NAME_APPROPRIATE_OUTPUT_PATH}.log #
+            COMMENT "Compiling ${INPUT_FILE_RELATIVE}" #
 			MAIN_DEPENDENCY ${ARG_FILE} #
 		)
+
+        add_custom_target(
+             ${FILE_NAME_APPROPRIATE_OUTPUT_PATH} ALL #
+             DEPENDS ${ARG_OUTPUT} #
+        )
 	endfunction()
 endif()
 
@@ -613,10 +664,11 @@ if(TARGET bgfx::shaderc)
 			get_filename_component(SHADER_FILE_NAME_WE ${SHADER_FILE} NAME_WE)
 			get_filename_component(SHADER_FILE_ABSOLUTE ${SHADER_FILE} ABSOLUTE)
 
+            file(RELATIVE_PATH SHADER_FILE_RELATIVE ${CMAKE_BINARY_DIR} ${SHADER_FILE_ABSOLUTE})
+
 			# Build output targets and their commands
 			set(OUTPUTS "")
 			set(COMMANDS "")
-			set(MKDIR_COMMANDS "")
 			foreach(PROFILE ${PROFILES})
 				_bgfx_get_profile_path_ext(${PROFILE} PROFILE_PATH_EXT)
 				_bgfx_get_profile_ext(${PROFILE} PROFILE_EXT)
@@ -624,6 +676,7 @@ if(TARGET bgfx::shaderc)
 					set(HEADER_PREFIX .h)
 				endif()
 				set(OUTPUT ${ARGS_OUTPUT_DIR}/${PROFILE_PATH_EXT}/${SHADER_FILE_BASENAME}.bin${HEADER_PREFIX})
+                file(MAKE_DIRECTORY ${ARGS_OUTPUT_DIR}/${PROFILE_PATH_EXT})
 				set(PLATFORM_I ${PLATFORM})
 				if(PROFILE STREQUAL "spirv")
 					set(PLATFORM_I LINUX)
@@ -645,24 +698,36 @@ if(TARGET bgfx::shaderc)
 				)
 				list(APPEND OUTPUTS ${OUTPUT})
 				list(APPEND ALL_OUTPUTS ${OUTPUT})
-				list(
-					APPEND
-					MKDIR_COMMANDS
-					COMMAND
-					${CMAKE_COMMAND}
-					-E
-					make_directory
-					${ARGS_OUTPUT_DIR}/${PROFILE_PATH_EXT}
-				)
-				list(APPEND COMMANDS COMMAND bgfx::shaderc ${CLI})
+
+                file(RELATIVE_PATH OUTPUT_RELATIVE ${CMAKE_BINARY_DIR} ${OUTPUT})
+
+                string(REPLACE " " "_"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${OUTPUT_RELATIVE})
+                string(REPLACE "/" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH})
+                string(REPLACE "\\" "-"  FILE_NAME_APPROPRIATE_OUTPUT_PATH ${FILE_NAME_APPROPRIATE_OUTPUT_PATH}) # probably need this for windows
+
+				list(APPEND COMMANDS COMMAND bgfx::shaderc ${CLI} > bgfx_tool_logs/shader_compile_output_${FILE_NAME_APPROPRIATE_OUTPUT_PATH}.log)
 			endforeach()
 
+            file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bgfx_tool_logs)
+
+            # This is to prevent error if compiling as binary and header in same output path 
+            set(TARGET_NAME "${SHADER_FILE_RELATIVE}")
+            if(ARGS_AS_HEADERS)  
+                set(TARGET_NAME "${SHADER_FILE_RELATIVE} as header")
+            endif()
+
 			add_custom_command(
-				OUTPUT ${OUTPUTS}
-				COMMAND ${MKDIR_COMMANDS} ${COMMANDS}
-				MAIN_DEPENDENCY ${SHADER_FILE_ABSOLUTE}
-				DEPENDS ${ARGS_VARYING_DEF}
+				OUTPUT ${OUTPUTS} #
+				COMMAND ${COMMANDS} #
+				MAIN_DEPENDENCY ${SHADER_FILE_ABSOLUTE} #
+                COMMENT "Compiling ${TARGET_NAME}" #
+				DEPENDS ${ARGS_VARYING_DEF} #
 			)
+
+            add_custom_target(
+                ${FILE_NAME_APPROPRIATE_OUTPUT_PATH} ALL #
+                DEPENDS ${OUTPUTS} #
+            )
 		endforeach()
 
 		if(DEFINED ARGS_OUT_FILES_VAR)
