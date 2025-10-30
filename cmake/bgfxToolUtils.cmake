@@ -614,10 +614,10 @@ if(TARGET bgfx::shaderc)
 			get_filename_component(SHADER_FILE_ABSOLUTE ${SHADER_FILE} ABSOLUTE)
 
 			# Build output targets and their commands
-			set(OUTPUTS "")
-			set(COMMANDS "")
-			set(MKDIR_COMMANDS "")
 			foreach(PROFILE ${PROFILES})
+                set(OUTPUTS "")
+                set(COMMANDS "")
+                set(MKDIR_COMMANDS "")
 				_bgfx_get_profile_path_ext(${PROFILE} PROFILE_PATH_EXT)
 				_bgfx_get_profile_ext(${PROFILE} PROFILE_EXT)
 				if(ARGS_AS_HEADERS)
@@ -655,14 +655,14 @@ if(TARGET bgfx::shaderc)
 					${ARGS_OUTPUT_DIR}/${PROFILE_PATH_EXT}
 				)
 				list(APPEND COMMANDS COMMAND bgfx::shaderc ${CLI})
-			endforeach()
 
-			add_custom_command(
-				OUTPUT ${OUTPUTS}
-				COMMAND ${MKDIR_COMMANDS} ${COMMANDS}
-				MAIN_DEPENDENCY ${SHADER_FILE_ABSOLUTE}
-				DEPENDS ${ARGS_VARYING_DEF}
-			)
+                add_custom_command(
+                    OUTPUT ${OUTPUTS}
+                    COMMAND ${MKDIR_COMMANDS} ${COMMANDS}
+                    MAIN_DEPENDENCY ${SHADER_FILE_ABSOLUTE}
+                    DEPENDS ${ARGS_VARYING_DEF}
+                )
+			endforeach()
 		endforeach()
 
 		if(DEFINED ARGS_OUT_FILES_VAR)
