@@ -110,10 +110,12 @@ file(
 	${SPIRV_TOOLS}/source/val/validate_debug.cpp
 	${SPIRV_TOOLS}/source/val/validate_decorations.cpp
 	${SPIRV_TOOLS}/source/val/validate_derivatives.cpp
+	${SPIRV_TOOLS}/source/val/validate_dot_product.cpp
 	${SPIRV_TOOLS}/source/val/validate_execution_limitations.cpp
 	${SPIRV_TOOLS}/source/val/validate_extensions.cpp
 	${SPIRV_TOOLS}/source/val/validate_function.cpp
 	${SPIRV_TOOLS}/source/val/validate_graph.cpp
+	${SPIRV_TOOLS}/source/val/validate_group.cpp
 	${SPIRV_TOOLS}/source/val/validate_id.cpp
 	${SPIRV_TOOLS}/source/val/validate_image.cpp
 	${SPIRV_TOOLS}/source/val/validate_instruction.cpp
@@ -129,6 +131,7 @@ file(
 	${SPIRV_TOOLS}/source/val/validate_misc.cpp
 	${SPIRV_TOOLS}/source/val/validate_mode_setting.cpp
 	${SPIRV_TOOLS}/source/val/validate_non_uniform.cpp
+	${SPIRV_TOOLS}/source/val/validate_pipe.cpp
 	${SPIRV_TOOLS}/source/val/validate_primitives.cpp
 	${SPIRV_TOOLS}/source/val/validate_ray_query.cpp
 	${SPIRV_TOOLS}/source/val/validate_ray_tracing.cpp

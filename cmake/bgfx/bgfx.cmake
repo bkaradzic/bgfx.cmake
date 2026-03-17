@@ -59,7 +59,6 @@ endif()
 
 if(BGFX_CONFIG_RENDERER_WEBGPU)
 	include(${CMAKE_CURRENT_LIST_DIR}/3rdparty/webgpu.cmake)
-	target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_WEBGPU=1)
 	if(EMSCRIPTEN)
 		target_link_options(bgfx PRIVATE "-s USE_WEBGPU=1")
 	else()
@@ -207,10 +206,14 @@ endif()
 # Put in a "bgfx" folder in Visual Studio
 set_target_properties(bgfx PROPERTIES FOLDER "bgfx")
 
-# in Xcode we need to specify this file as objective-c++ (instead of renaming to .mm)
+# in Xcode we need to specify these files as objective-c++ (instead of renaming to .mm)
 if(XCODE)
 	set_source_files_properties(
-		${BGFX_DIR}/src/renderer_vk.cpp PROPERTIES LANGUAGE OBJCXX XCODE_EXPLICIT_FILE_TYPE sourcecode.cpp.objcpp
+		${BGFX_DIR}/src/renderer_vk.cpp
+		${BGFX_DIR}/src/renderer_webgpu.cpp
+		PROPERTIES
+			LANGUAGE OBJCXX
+			XCODE_EXPLICIT_FILE_TYPE sourcecode.cpp.objcpp
 	)
 endif()
 
