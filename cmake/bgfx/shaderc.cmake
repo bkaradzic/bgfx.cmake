@@ -49,6 +49,7 @@ if(UNIX
 		PRIVATE ${BGFX_DIR}/3rdparty/directx-headers/include/directx
 				${BGFX_DIR}/3rdparty/directx-headers/include
 				${BGFX_DIR}/3rdparty/directx-headers/include/wsl/stubs
+				${BGFX_DIR}/3rdparty/d3d4linux/include
 	)
 endif()
 
