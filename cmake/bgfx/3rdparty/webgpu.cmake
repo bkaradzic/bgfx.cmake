@@ -19,10 +19,12 @@ file(GLOB WEBGPU_SOURCES ${BGFX_DIR}/3rdparty/webgpu/include/webgpu/*.h
 # Library without sources is interface
 #add_library( webgpu STATIC ${WEBGPU_SOURCES} )
 add_library(webgpu INTERFACE)
-target_include_directories(
-	webgpu # PUBLIC
-	INTERFACE $<BUILD_INTERFACE:${BGFX_DIR}/3rdparty/webgpu/include>
-)
+if(NOT __EMSCRIPTEN__)
+    target_include_directories(
+        webgpu # PUBLIC
+        INTERFACE $<BUILD_INTERFACE:${BGFX_DIR}/3rdparty/webgpu/include>
+    )
+endif()
 
 # These properties are not allowed on interface
 # set_target_properties(webgpu PROPERTIES FOLDER "bgfx/3rdparty" PREFIX "${CMAKE_STATIC_LIBRARY_PREFIX}bgfx-")
