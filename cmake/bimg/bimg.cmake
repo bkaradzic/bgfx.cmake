@@ -22,10 +22,11 @@ file(
 	${BIMG_DIR}/src/image_gnf.cpp #
 	#
 	${ASTC_ENCODER_SOURCES}
-	${MINIZ_SOURCES}
 )
 
 add_library(bimg STATIC ${BIMG_SOURCES})
+
+target_compile_definitions(bimg PRIVATE BIMG_CONFIG_DECODE_ENABLE=$<BOOL:${BIMG_CONFIG_DECODE_ENABLE}>)
 
 # Put in a "bgfx" folder in Visual Studio
 set_target_properties(bimg PROPERTIES FOLDER "bgfx")

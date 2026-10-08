@@ -91,25 +91,9 @@ if(BGFX_WITH_WAYLAND)
 	target_link_libraries(bgfx PRIVATE wayland-egl)
 endif()
 
-set(BGFX_CONFIG_OPTIONS "")
-list(
-	APPEND
-	BGFX_CONFIG_OPTIONS
-	"BGFX_CONFIG_MAX_DRAW_CALLS"
-	"BGFX_CONFIG_MAX_VIEWS"
-	"BGFX_CONFIG_MAX_FRAME_BUFFERS"
-	"BGFX_CONFIG_MAX_VERTEX_LAYOUTS"
-	"BGFX_CONFIG_MAX_VERTEX_BUFFERS"
-	"BGFX_CONFIG_MAX_DYNAMIC_VERTEX_BUFFERS"
-	"BGFX_CONFIG_MAX_INDEX_BUFFERS"
-	"BGFX_CONFIG_MAX_DYNAMIC_INDEX_BUFFERS"
-	"BGFX_CONFIG_MAX_TEXTURES"
-	"BGFX_CONFIG_MAX_TEXTURE_SAMPLERS"
-	"BGFX_CONFIG_MAX_SHADERS"
-	"BGFX_CONFIG_SORT_KEY_NUM_BITS_PROGRAM"
-)
+# Forward the bgfx compile-time options declared in the top level CMakeLists.txt.
 foreach(BGFX_CONFIG_OPTION IN LISTS BGFX_CONFIG_OPTIONS)
-	if(NOT ${${BGFX_CONFIG_OPTION}} STREQUAL "")
+	if(NOT "${${BGFX_CONFIG_OPTION}}" STREQUAL "")
 		target_compile_definitions(bgfx PUBLIC "${BGFX_CONFIG_OPTION}=${${BGFX_CONFIG_OPTION}}")
 	endif()
 endforeach()
@@ -221,6 +205,7 @@ if(XCODE)
 	set_source_files_properties(
 		${BGFX_DIR}/src/renderer_vk.cpp
 		${BGFX_DIR}/src/renderer_webgpu.cpp
+		${BGFX_DIR}/src/video_mtl.cpp
 		PROPERTIES
 			LANGUAGE OBJCXX
 			XCODE_EXPLICIT_FILE_TYPE sourcecode.cpp.objcpp

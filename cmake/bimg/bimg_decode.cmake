@@ -21,7 +21,6 @@ file(
 	${BIMG_DIR}/src/image_decode*.* #
 	#
 	${LOADPNG_SOURCES} #
-	${MINIZ_SOURCES} #
 )
 
 # AVIF decoding (libavif + dav1d), enabled by default in bimg
@@ -32,15 +31,10 @@ set(BIMG_DECODE_AVIF_SOURCES
 	${BIMG_DIR}/3rdparty/libavif/libavif-amalgamated.c #
 )
 
-add_library(bimg_decode STATIC ${BIMG_DECODE_SOURCES} ${BIMG_DECODE_AVIF_SOURCES})
+add_library(bimg_decode STATIC ${BIMG_DECODE_SOURCES})
 
 # Put in a "bgfx" folder in Visual Studio
 set_target_properties(bimg_decode PROPERTIES FOLDER "bgfx")
-
-# dav1d amalgamated sources require C11
-set_source_files_properties(${BIMG_DECODE_AVIF_SOURCES} PROPERTIES C_STANDARD 11)
-
-target_compile_definitions(bimg_decode PRIVATE AVIF_CODEC_DAV1D)
 
 target_include_directories(
 	bimg_decode
@@ -48,12 +42,6 @@ target_include_directories(
 	PRIVATE ${LOADPNG_INCLUDE_DIR} #
 			${MINIZ_INCLUDE_DIR} #
 			${TINYEXR_INCLUDE_DIR} #
-			${BIMG_DIR}/3rdparty/libavif #
-			${BIMG_DIR}/3rdparty/libavif/include #
-			${BIMG_DIR}/3rdparty/libavif/third_party/libyuv/include #
-			${BIMG_DIR}/3rdparty/dav1d #
-			${BIMG_DIR}/3rdparty/dav1d/include #
-			$<$<C_COMPILER_ID:MSVC>:${BIMG_DIR}/3rdparty/dav1d/include/compat/msvc> #
 )
 
 target_link_libraries(
@@ -63,6 +51,44 @@ target_link_libraries(
 		   ${MINIZ_LIBRARIES} #
 		   ${TINYEXR_LIBRARIES} #
 )
+
+target_compile_definitions(
+	bimg_decode
+	PRIVATE BIMG_CONFIG_PARSE_ENABLE=$<BOOL:${BIMG_CONFIG_PARSE_ENABLE}> #
+			BIMG_CONFIG_USE_WIC=$<BOOL:${BIMG_CONFIG_USE_WIC}> #
+			BIMG_CONFIG_USE_STB_IMAGE=$<BOOL:${BIMG_CONFIG_USE_STB_IMAGE}> #
+)
+
+foreach(OPTION ${BIMG_CONFIG_PARSE_OPTIONS})
+	if(NOT "${${OPTION}}" STREQUAL "")
+		target_compile_definitions(bimg_decode PRIVATE ${OPTION}=$<BOOL:${${OPTION}}>)
+	endif()
+endforeach()
+
+if("${BIMG_CONFIG_PARSE_AVIF}" STREQUAL "")
+	set(BIMG_DECODE_AVIF "${BIMG_CONFIG_PARSE_ENABLE}")
+else()
+	set(BIMG_DECODE_AVIF "${BIMG_CONFIG_PARSE_AVIF}")
+endif()
+
+if(BIMG_DECODE_AVIF)
+	target_sources(bimg_decode PRIVATE ${BIMG_DECODE_AVIF_SOURCES})
+
+	# dav1d amalgamated sources require C11
+	set_target_properties(bimg_decode PROPERTIES C_STANDARD 11 C_STANDARD_REQUIRED YES)
+
+	target_compile_definitions(bimg_decode PRIVATE AVIF_CODEC_DAV1D)
+
+	target_include_directories(
+		bimg_decode
+		PRIVATE ${BIMG_DIR}/3rdparty/libavif #
+				${BIMG_DIR}/3rdparty/libavif/include #
+				${BIMG_DIR}/3rdparty/libavif/third_party/libyuv/include #
+				${BIMG_DIR}/3rdparty/dav1d #
+				${BIMG_DIR}/3rdparty/dav1d/include #
+				$<$<C_COMPILER_ID:MSVC>:${BIMG_DIR}/3rdparty/dav1d/include/compat/msvc> #
+	)
+endif()
 
 if(BGFX_INSTALL AND NOT BGFX_LIBRARY_TYPE MATCHES "SHARED")
 	install(
