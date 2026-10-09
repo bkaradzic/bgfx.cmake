@@ -109,6 +109,7 @@ bgfx_config_option(BGFX_CONFIG_MAX_RECT_CACHE "Specify maximum scissor rect cach
 bgfx_config_option(BGFX_CONFIG_SORT_KEY_NUM_BITS_PROGRAM "Specify maximum program count as 2^(program bits)")
 bgfx_config_option(BGFX_CONFIG_MIN_RESOURCE_COMMAND_BUFFER_SIZE "Specify minimum resource command buffer size")
 bgfx_config_option(BGFX_CONFIG_MIN_UNIFORM_BUFFER_SIZE "Specify minimum uniform buffer size")
+bgfx_config_option(BGFX_CONFIG_MIN_UNIFORM_CACHE_SIZE "Specify minimum view and frame uniform cache size")
 bgfx_config_option(BGFX_CONFIG_UNIFORM_BUFFER_RESIZE_THRESHOLD_SIZE "Specify uniform buffer resize threshold size")
 bgfx_config_option(BGFX_CONFIG_UNIFORM_BUFFER_RESIZE_INCREMENT_SIZE "Specify uniform buffer resize increment size")
 bgfx_config_option(BGFX_CONFIG_DYNAMIC_VERTEX_BUFFER_SIZE "Specify dynamic vertex buffer block size in bytes")

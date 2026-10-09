@@ -26,6 +26,7 @@ if(BGFX_BUILD_TESTS)
 	add_executable(bx_test ${BX_TEST_SOURCES})
 	target_compile_definitions(bx_test PRIVATE CATCH_AMALGAMATED_CUSTOM_MAIN)
 	target_link_libraries(bx_test PRIVATE bx)
+	set_target_properties(bx_test PROPERTIES OUTPUT_NAME bx.test)
 	add_test(NAME bx.test COMMAND bx_test)
 
 	file(
