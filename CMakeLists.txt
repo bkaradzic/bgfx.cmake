@@ -48,7 +48,10 @@ cmake_dependent_option(
 )
 cmake_dependent_option(BGFX_WITH_WAYLAND "Use Wayland backend." ON "CMAKE_SYSTEM_NAME STREQUAL Linux" OFF)
 option(BGFX_CUSTOM_TARGETS "Include convenience custom targets." ON)
-cmake_dependent_option(BGFX_CONFIG_MULTITHREADED "Build bgfx with multithreaded configuration" ON "NOT CMAKE_SYSTEM_NAME STREQUAL Emscripten" OFF)
+cmake_dependent_option(
+	BGFX_CONFIG_MULTITHREADED "Build bgfx with multithreaded configuration" ON
+	"NOT CMAKE_SYSTEM_NAME STREQUAL Emscripten" OFF
+)
 option(BGFX_CONFIG_RENDERER_WEBGPU "Enable the webgpu renderer" OFF)
 option(BGFX_CONFIG_DEBUG_ANNOTATION "Enable gfx debug annotations (default: on in debug)" OFF)
 option(BGFX_CONFIG_VIDEO "Enable hardware video decoder" ON)
@@ -131,25 +134,54 @@ if(BGFX_BUILD_TESTS)
 	enable_testing()
 endif()
 
-if(NOT BX_DIR)
-	set(BX_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bx" CACHE STRING "Location of bx.")
-elseif(NOT IS_ABSOLUTE "${BX_DIR}")
-	get_filename_component(BX_DIR "${BX_DIR}" REALPATH BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-endif()
-if(NOT BIMG_DIR)
-	set(BIMG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bimg" CACHE STRING "Location of bimg.")
-elseif(NOT IS_ABSOLUTE "${BIMG_DIR}")
-	get_filename_component(BIMG_DIR "${BIMG_DIR}" REALPATH BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-endif()
-if(NOT BGFX_DIR)
-	set(BGFX_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bgfx" CACHE STRING "Location of bgfx.")
-elseif(NOT IS_ABSOLUTE "${BGFX_DIR}")
-	get_filename_component(BGFX_DIR "${BGFX_DIR}" REALPATH BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-endif()
+include(FetchContent)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
 
-file(TO_CMAKE_PATH "${BX_DIR}" BX_DIR)
-file(TO_CMAKE_PATH "${BIMG_DIR}" BIMG_DIR)
-file(TO_CMAKE_PATH "${BGFX_DIR}" BGFX_DIR)
+# The wrapper supplies its own CMake targets, not the dependencies' projects.
+FetchContent_Declare(
+	bx_source
+	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
+	GIT_TAG ${BX_GIT_TAG}
+	GIT_SHALLOW FALSE
+	SOURCE_SUBDIR bgfx-cmake-no-subproject
+)
+FetchContent_Declare(
+	bimg_source
+	GIT_REPOSITORY https://github.com/bkaradzic/bimg.git
+	GIT_TAG ${BIMG_GIT_TAG}
+	GIT_SHALLOW FALSE
+	SOURCE_SUBDIR bgfx-cmake-no-subproject
+)
+FetchContent_Declare(
+	bgfx_source
+	GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git
+	GIT_TAG ${BGFX_GIT_TAG}
+	GIT_SHALLOW FALSE
+	SOURCE_SUBDIR bgfx-cmake-no-subproject
+)
+
+# Keep locally supplied/unpacked sources ahead of fetching, without caching the
+# default path: a later pin change must not leave a stale source-dir cache entry.
+foreach(dep IN ITEMS bx bimg bgfx)
+	string(TOUPPER "${dep}" DEP)
+	# Discard defaults cached by older submodule-based configurations when
+	# their source directories no longer exist.
+	if(DEFINED CACHE{${DEP}_DIR} AND "${${DEP}_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}/${dep}"
+	   AND NOT EXISTS "${${DEP}_DIR}/include/${dep}/${dep}.h"
+	)
+		unset(${DEP}_DIR CACHE)
+		unset(${DEP}_DIR)
+	endif()
+	if(${DEP}_DIR)
+		get_filename_component(${DEP}_DIR "${${DEP}_DIR}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+	elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${dep}/include/${dep}/${dep}.h")
+		set(${DEP}_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${dep}")
+	else()
+		FetchContent_MakeAvailable(${dep}_source)
+		FetchContent_GetProperties(${dep}_source SOURCE_DIR ${DEP}_DIR)
+	endif()
+	file(TO_CMAKE_PATH "${${DEP}_DIR}" ${DEP}_DIR)
+endforeach()
 
 # sets project version from api ver / git rev
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.cmake)
