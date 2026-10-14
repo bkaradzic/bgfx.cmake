@@ -12,13 +12,13 @@ CMake 3.21 or newer is required.
 ```bash
 git clone https://github.com/bkaradzic/bgfx.cmake.git
 cd bgfx.cmake
-git submodule init
-git submodule update
 cmake -S. -Bcmake-build # $CMakeOptions
 cmake --build cmake-build
 ```
 
-If downloading via zip (instead of using git submodules) manually download bx, bimg and bgfx and copy them into the root directory, or locate them via `BX_DIR`, `BIMG_DIR` and `BGFX_DIR` CMake variables.
+Configure uses CMake FetchContent to download the pinned bx, bimg and bgfx revisions into the build directory. A network connection and Git (with complete history for bgfx's revision count) are required for the default build. Subsequent configurations reuse the downloaded sources.
+
+For offline builds, supply local source trees with `BX_DIR`, `BIMG_DIR` and `BGFX_DIR` (absolute paths or paths relative to this repository), or unpack bx, bimg and bgfx into the repository root. Each dependency can be overridden independently. Release source archives already include these folders. `FETCHCONTENT_SOURCE_DIR_BX_SOURCE`, `FETCHCONTENT_SOURCE_DIR_BIMG_SOURCE` and `FETCHCONTENT_SOURCE_DIR_BGFX_SOURCE` also override fetched sources; a parent project can provide FetchContent declarations named `bx_source`, `bimg_source` and `bgfx_source` before adding this project. The distinct upstream names allow a parent to declare and populate this wrapper itself as `bgfx`.
 
 Apple universal builds containing x86 slices require Xcode 14+ (or upstream Clang 14+) for scoped unused-argument handling of the architecture-specific SSE4.2 options.
 
