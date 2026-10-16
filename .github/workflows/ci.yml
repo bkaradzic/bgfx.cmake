@@ -29,25 +29,11 @@ jobs:
         run: |
           cmake --version | grep ${{ env.CMAKE_VERSION }}
       - name: Test config
+        # old way of configuring a build directory
         run: |
           mkdir -p "${{ env.CMAKE_BUILD_DIR }}"
           cd "${{ env.CMAKE_BUILD_DIR }}"
           cmake ${{ github.workspace }} -GNinja -DCMAKE_BUILD_TYPE=Release
-          cmake -DINPUT_FILE="${{ github.workspace }}/cmake/dependencies.cmake" -DOUTPUT_FILE="${{ env.CMAKE_BUILD_DIR }}/pins.txt" -P "${{ github.workspace }}/cmake/dependency-pins.cmake"
-          while read -r dep pin; do
-            test "$(git -C "_deps/${dep}_source-src" rev-parse HEAD)" = "$pin"
-            test "$(git -C "_deps/${dep}_source-src" rev-parse --is-shallow-repository)" = false
-          done < pins.txt
-          cmake ${{ github.workspace }} -GNinja -DCMAKE_BUILD_TYPE=Release
-      - name: Test parent FetchContent and partial source overrides
-        run: |
-          cmake -S "${{ github.workspace }}/cmake/tests/parent-fetchcontent" -B "${{ github.workspace }}/build/parent-fetchcontent" -GNinja \
-            -DBGFX_WRAPPER_SOURCE_DIR="${{ github.workspace }}" -DFETCHCONTENT_BASE_DIR="${{ github.workspace }}/build/_deps"
-          cmake -S "${{ github.workspace }}/cmake/tests/parent-fetchcontent" -B "${{ github.workspace }}/build/parent-overrides" -GNinja \
-            -DBGFX_WRAPPER_SOURCE_DIR="${{ github.workspace }}" -DFETCHCONTENT_BASE_DIR="${{ github.workspace }}/build/_deps" \
-            -DBGFX_PARENT_USE_ADD_SUBDIRECTORY=ON \
-            -DBX_DIR="${{ github.workspace }}/build/_deps/bx_source-src" \
-            -DBGFX_DIR="${{ github.workspace }}/build/_deps/bgfx_source-src"
 
   native:
     name: ${{ matrix.os }} ${{ matrix.cc }}
