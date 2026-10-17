@@ -16,7 +16,7 @@ cmake -S. -Bcmake-build # $CMakeOptions
 cmake --build cmake-build
 ```
 
-Configure uses CMake FetchContent to download the pinned bx, bimg and bgfx revisions into the build directory. A network connection and Git (with complete history for bgfx's revision count) are required for the default build. Subsequent configurations reuse the downloaded sources.
+Configure uses CMake FetchContent to download the pinned bx, bimg and bgfx revisions into the build directory. A network connection and Git are required for the default build. Subsequent configurations reuse the downloaded sources.
 
 For offline builds, supply local source trees with `BX_DIR`, `BIMG_DIR` and `BGFX_DIR` (absolute paths or paths relative to this repository), or unpack bx, bimg and bgfx into the repository root. Each dependency can be overridden independently. Release source archives already include these folders. `FETCHCONTENT_SOURCE_DIR_BX_SOURCE`, `FETCHCONTENT_SOURCE_DIR_BIMG_SOURCE` and `FETCHCONTENT_SOURCE_DIR_BGFX_SOURCE` also override fetched sources; a parent project can provide FetchContent declarations named `bx_source`, `bimg_source` and `bgfx_source` before adding this project. The distinct upstream names allow a parent to declare and populate this wrapper itself as `bgfx`.
 

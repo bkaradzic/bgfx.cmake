@@ -1,4 +1,3 @@
-# Pinned dependency revisions; also used by the release workflow.
-set(BX_GIT_TAG a29c2864300b702486f67e3f0166293ff64a8350)
-set(BIMG_GIT_TAG 8e665781eff8e963a04924f1acc1d74324149bcb)
-set(BGFX_GIT_TAG fd541f05865f6e7fbfc302f81f5a71d2b05794eb)
+set(BX_GIT_TAG ad000aeb3163e187cd70effedd3cc9912b2850d1)
+set(BIMG_GIT_TAG 6d60464eb295333b53ce6ec6fe71eddf7177a799)
+set(BGFX_GIT_TAG 32966cfc7c9762b890029c3f6f217d98897d2a6e)

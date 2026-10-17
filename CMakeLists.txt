@@ -134,7 +134,6 @@ endif()
 include(FetchContent)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
 
-# The wrapper supplies its own CMake targets, not the dependencies' projects.
 FetchContent_Declare(
 	bx_source
 	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
@@ -157,22 +156,25 @@ FetchContent_Declare(
 	SOURCE_SUBDIR bgfx-cmake-no-subproject
 )
 
-# Keep locally supplied/unpacked sources ahead of fetching, without caching the
-# default path: a later pin change must not leave a stale source-dir cache entry.
 foreach(dep IN ITEMS bx bimg bgfx)
 	string(TOUPPER "${dep}" DEP)
-	# Discard defaults cached by older submodule-based configurations when
-	# their source directories no longer exist.
+	set(${dep}_in_tree "${CMAKE_CURRENT_SOURCE_DIR}/${dep}")
+	set(${dep}_in_tree_usable FALSE)
+	if(EXISTS "${${dep}_in_tree}/.git" AND NOT IS_DIRECTORY "${${dep}_in_tree}/.git")
+		message(WARNING "Ignoring leftover ${dep} submodule checkout at ${${dep}_in_tree}; delete it to silence this warning")
+	elseif(EXISTS "${${dep}_in_tree}/include/${dep}/${dep}.h")
+		set(${dep}_in_tree_usable TRUE)
+	endif()
 	if(DEFINED CACHE{${DEP}_DIR} AND "${${DEP}_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}/${dep}"
-	   AND NOT EXISTS "${${DEP}_DIR}/include/${dep}/${dep}.h"
+	   AND NOT ${dep}_in_tree_usable
 	)
 		unset(${DEP}_DIR CACHE)
 		unset(${DEP}_DIR)
 	endif()
 	if(${DEP}_DIR)
 		get_filename_component(${DEP}_DIR "${${DEP}_DIR}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-	elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${dep}/include/${dep}/${dep}.h")
-		set(${DEP}_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${dep}")
+	elseif(${dep}_in_tree_usable)
+		set(${DEP}_DIR "${${dep}_in_tree}")
 	else()
 		FetchContent_MakeAvailable(${dep}_source)
 		FetchContent_GetProperties(${dep}_source SOURCE_DIR ${DEP}_DIR)
