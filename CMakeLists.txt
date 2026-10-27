@@ -138,19 +138,16 @@ FetchContent_Declare(
 	bx
 	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
 	GIT_TAG ${BX_GIT_TAG}
-	GIT_SHALLOW FALSE
 )
 FetchContent_Declare(
 	bimg
 	GIT_REPOSITORY https://github.com/bkaradzic/bimg.git
 	GIT_TAG ${BIMG_GIT_TAG}
-	GIT_SHALLOW FALSE
 )
 FetchContent_Declare(
 	bgfx
 	GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git
 	GIT_TAG ${BGFX_GIT_TAG}
-	GIT_SHALLOW FALSE
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)
