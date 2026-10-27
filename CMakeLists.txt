@@ -135,21 +135,21 @@ include(FetchContent)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
 
 FetchContent_Declare(
-	bx_source
+	bx
 	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
 	GIT_TAG ${BX_GIT_TAG}
 	GIT_SHALLOW FALSE
 	SOURCE_SUBDIR bgfx-cmake-no-subproject
 )
 FetchContent_Declare(
-	bimg_source
+	bimg
 	GIT_REPOSITORY https://github.com/bkaradzic/bimg.git
 	GIT_TAG ${BIMG_GIT_TAG}
 	GIT_SHALLOW FALSE
 	SOURCE_SUBDIR bgfx-cmake-no-subproject
 )
 FetchContent_Declare(
-	bgfx_source
+	bgfx
 	GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git
 	GIT_TAG ${BGFX_GIT_TAG}
 	GIT_SHALLOW FALSE
@@ -176,8 +176,8 @@ foreach(dep IN ITEMS bx bimg bgfx)
 	elseif(${dep}_in_tree_usable)
 		set(${DEP}_DIR "${${dep}_in_tree}")
 	else()
-		FetchContent_MakeAvailable(${dep}_source)
-		FetchContent_GetProperties(${dep}_source SOURCE_DIR ${DEP}_DIR)
+		FetchContent_MakeAvailable(${dep})
+		FetchContent_GetProperties(${dep} SOURCE_DIR ${DEP}_DIR)
 	endif()
 	file(TO_CMAKE_PATH "${${DEP}_DIR}" ${DEP}_DIR)
 endforeach()

@@ -34,7 +34,7 @@ jobs:
         run: cmake -S . -B build -DBGFX_BUILD_EXAMPLES=OFF -DBGFX_BUILD_TOOLS=OFF -DBGFX_INSTALL=OFF
       - id: version
         run: |
-          BGFX_SOURCE=build/_deps/bgfx_source-src
+          BGFX_SOURCE=build/_deps/bgfx-src
           API_VERSION=$(grep -Eo "BGFX_API_VERSION UINT32_C\([0-9]+\)" "$BGFX_SOURCE/include/bgfx/defines.h" | grep -Eo "[0-9]+" | tail -1)
           test "$(git -C "$BGFX_SOURCE" rev-parse --is-shallow-repository)" = false
           BGFX_REVISION=$(git -C "$BGFX_SOURCE" rev-list HEAD --count)
@@ -82,7 +82,7 @@ jobs:
           cmake -B "${{ env.CMAKE_BUILD_DIR }}" "-DCMAKE_INSTALL_PREFIX=${{ env.CMAKE_INSTALL_DIR }}" -DCMAKE_DEBUG_POSTFIX=d -DBGFX_BUILD_EXAMPLES=OFF -DBGFX_BUILD_TOOLS=ON -DBGFX_INSTALL=ON -DBGFX_AMALGAMATED=ON -DCMAKE_BUILD_TYPE=Release
       - name: Update version.h
         run: |
-          VERSION_H="${{ env.CMAKE_BUILD_DIR }}/_deps/bgfx_source-src/src/version.h"
+          VERSION_H="${{ env.CMAKE_BUILD_DIR }}/_deps/bgfx-src/src/version.h"
           sed "s/ BGFX_REV_NUMBER .*/ BGFX_REV_NUMBER ${{ needs.version.outputs.revision }}/g" "$VERSION_H" > version.tmp && mv version.tmp "$VERSION_H"
           sed "s/ BGFX_REV_SHA1 .*/ BGFX_REV_SHA1 \"${{ needs.version.outputs.sha }}\"/g" "$VERSION_H" > version.tmp && mv version.tmp "$VERSION_H"
         shell: bash
@@ -161,7 +161,7 @@ jobs:
                 continue
               fi
 
-              SOURCE=".release-build/_deps/${SUB}_source-src"
+              SOURCE=".release-build/_deps/${SUB}-src"
               URL=$(git -C "$SOURCE" remote get-url origin)
               UPSTREAM=${URL#*github.com[/:]}; UPSTREAM=${UPSTREAM%.git}
               echo "### $SUB ([\`${PREV_SHA:0:7}...${CUR_SHA:0:7}\`](https://github.com/$UPSTREAM/compare/$PREV_SHA...$CUR_SHA))" >> "$NOTES_FILE"
@@ -180,7 +180,7 @@ jobs:
         working-directory: src/bgfx.cmake
         run: |
           while read -r dep pin; do
-            cp -a ".release-build/_deps/${dep}_source-src" "$dep"
+            cp -a ".release-build/_deps/${dep}-src" "$dep"
           done < .release-build/pins.txt
           sed -i "s/ BGFX_REV_NUMBER .*/ BGFX_REV_NUMBER ${{ needs.version.outputs.revision }}/g" bgfx/src/version.h
           sed -i "s/ BGFX_REV_SHA1 .*/ BGFX_REV_SHA1 \"${{ needs.version.outputs.sha }}\"/g" bgfx/src/version.h
