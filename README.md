@@ -20,7 +20,7 @@ Configure uses CMake FetchContent to download the pinned bx, bimg and bgfx revis
 
 For offline builds, supply local source trees with `BX_DIR`, `BIMG_DIR` and `BGFX_DIR` (absolute paths or paths relative to this repository), or unpack bx, bimg and bgfx into the repository root. Each dependency can be overridden independently. Release source archives already include these folders. `FETCHCONTENT_SOURCE_DIR_BX`, `FETCHCONTENT_SOURCE_DIR_BIMG` and `FETCHCONTENT_SOURCE_DIR_BGFX` also override fetched sources; a parent project can provide FetchContent declarations named `bx`, `bimg` and `bgfx` before adding this project.
 
-When fetching this wrapper with FetchContent or CPM, name it `bgfx.cmake`, not `bgfx`: the `bgfx` content name identifies the library sources. Existing integrations must rename any wrapper declaration using `bgfx`, remove the `_source` suffix from dependency declarations, and replace `FETCHCONTENT_SOURCE_DIR_<DEP>_SOURCE` overrides with `FETCHCONTENT_SOURCE_DIR_<DEP>`.
+When fetching this wrapper with FetchContent or CPM, name it `bgfx.cmake`, not `bgfx`: the `bgfx` content name identifies the library sources.
 
 Apple universal builds containing x86 slices require Xcode 14+ (or upstream Clang 14+) for scoped unused-argument handling of the architecture-specific SSE4.2 options.
 

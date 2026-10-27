@@ -139,21 +139,18 @@ FetchContent_Declare(
 	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
 	GIT_TAG ${BX_GIT_TAG}
 	GIT_SHALLOW FALSE
-	SOURCE_SUBDIR bgfx-cmake-no-subproject
 )
 FetchContent_Declare(
 	bimg
 	GIT_REPOSITORY https://github.com/bkaradzic/bimg.git
 	GIT_TAG ${BIMG_GIT_TAG}
 	GIT_SHALLOW FALSE
-	SOURCE_SUBDIR bgfx-cmake-no-subproject
 )
 FetchContent_Declare(
 	bgfx
 	GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git
 	GIT_TAG ${BGFX_GIT_TAG}
 	GIT_SHALLOW FALSE
-	SOURCE_SUBDIR bgfx-cmake-no-subproject
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)
