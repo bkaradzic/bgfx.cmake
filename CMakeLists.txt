@@ -132,22 +132,21 @@ if(BGFX_BUILD_TESTS)
 endif()
 
 include(FetchContent)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
 
 FetchContent_Declare(
 	bx
 	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
-	GIT_TAG ${BX_GIT_TAG}
+	GIT_TAG 0e5bbca6878000f6371c65c53fe06f6f0ae87ca9
 )
 FetchContent_Declare(
 	bimg
 	GIT_REPOSITORY https://github.com/bkaradzic/bimg.git
-	GIT_TAG ${BIMG_GIT_TAG}
+	GIT_TAG 9bfbd6493b48a15238f2d1374a718ec026524515
 )
 FetchContent_Declare(
 	bgfx
 	GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git
-	GIT_TAG ${BGFX_GIT_TAG}
+	GIT_TAG fe9bbdec66110f8626b9251a4947fc336ac3f62c
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)

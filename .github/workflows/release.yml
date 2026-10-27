@@ -116,7 +116,7 @@ jobs:
         working-directory: src/bgfx.cmake
         run: |
           cmake -S . -B .release-build -DBGFX_BUILD_EXAMPLES=OFF -DBGFX_BUILD_TOOLS=OFF -DBGFX_INSTALL=OFF
-          cmake -DINPUT_FILE=cmake/dependencies.cmake -DOUTPUT_FILE=.release-build/pins.txt -P cmake/dependency-pins.cmake
+          cmake -DINPUT_FILE=CMakeLists.txt -DOUTPUT_FILE=.release-build/pins.txt -P cmake/dependency-pins.cmake
       - name: Generate release notes
         id: notes
         working-directory: src/bgfx.cmake
@@ -149,6 +149,9 @@ jobs:
             if git cat-file -e "$PREV_TAG:cmake/dependencies.cmake" 2>/dev/null; then
               git show "$PREV_TAG:cmake/dependencies.cmake" > .release-build/previous-dependencies.cmake
               cmake -DINPUT_FILE=.release-build/previous-dependencies.cmake -DOUTPUT_FILE=.release-build/previous-pins.txt -P cmake/dependency-pins.cmake
+            elif [ "$(git ls-tree "$PREV_TAG" bgfx | awk '{print $1}')" != "160000" ]; then
+              git show "$PREV_TAG:CMakeLists.txt" > .release-build/previous-CMakeLists.txt
+              cmake -DINPUT_FILE=.release-build/previous-CMakeLists.txt -DOUTPUT_FILE=.release-build/previous-pins.txt -P cmake/dependency-pins.cmake
             fi
 
             while read -r SUB CUR_SHA; do
