@@ -136,17 +136,17 @@ include(FetchContent)
 FetchContent_Declare(
 	bx
 	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
-	GIT_TAG ff68113202c71fa99a67831036500b2270ce313d
+	GIT_TAG 57548da89a07771c5b0f8a6711149be70e08a329
 )
 FetchContent_Declare(
 	bimg
 	GIT_REPOSITORY https://github.com/bkaradzic/bimg.git
-	GIT_TAG 388a5e637c63e472158c940317c68c735bca4795
+	GIT_TAG 77bebb28e12956bfced82bb2cf7c19ac5735b6c8
 )
 FetchContent_Declare(
 	bgfx
 	GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git
-	GIT_TAG a4f43eb7f671dc8f1f0443050c28f5eb14661983
+	GIT_TAG a9f89bf751ac6927a12371b49c5b7a096b09f95b
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)
