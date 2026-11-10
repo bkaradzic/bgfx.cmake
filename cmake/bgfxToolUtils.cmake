@@ -561,6 +561,7 @@ if(TARGET bgfx::shaderc)
 	# 	OUT_FILES_VAR variable name
 	# 	INCLUDE_DIRS directories
 	# 	DEFINES defines
+	# 	[DEPENDS filenames]
 	# 	[PROFILES profiles]
 	# 	[AS_HEADERS]
 	# 	[NO_SOURCE_GROUP]
@@ -569,7 +570,7 @@ if(TARGET bgfx::shaderc)
 	function(bgfx_compile_shaders)
 		set(options AS_HEADERS NO_SOURCE_GROUP)
 		set(oneValueArgs TYPE VARYING_DEF OUTPUT_DIR OUT_FILES_VAR)
-		set(multiValueArgs SHADERS INCLUDE_DIRS DEFINES PROFILES)
+		set(multiValueArgs SHADERS INCLUDE_DIRS DEFINES PROFILES DEPENDS)
 		cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" "${ARGN}")
 
 		if(ARGS_PROFILES)
@@ -631,6 +632,8 @@ if(TARGET bgfx::shaderc)
 			set(OUTPUTS "")
 			set(COMMANDS "")
 			set(MKDIR_COMMANDS "")
+			set(FIRST_PROFILE TRUE)
+			set(FIRST_OUTPUT "")
 			foreach(PROFILE ${PROFILES})
 				_bgfx_get_profile_path_ext(${PROFILE} PROFILE_PATH_EXT)
 				_bgfx_get_profile_ext(${PROFILE} PROFILE_EXT)
@@ -638,6 +641,9 @@ if(TARGET bgfx::shaderc)
 					set(HEADER_PREFIX .h)
 				endif()
 				set(OUTPUT ${ARGS_OUTPUT_DIR}/${PROFILE_PATH_EXT}/${SHADER_FILE_BASENAME}.bin${HEADER_PREFIX})
+				if(FIRST_PROFILE)
+					set(FIRST_OUTPUT ${OUTPUT})
+				endif()
 				set(PLATFORM_I ${PLATFORM})
 				if(PROFILE STREQUAL "spirv")
 					set(PLATFORM_I LINUX)
@@ -646,10 +652,20 @@ if(TARGET bgfx::shaderc)
 				if(ARGS_AS_HEADERS)
 					set(BIN2C_PART BIN2C ${SHADER_FILE_NAME_WE}_${PROFILE_EXT})
 				endif()
+
+				set(DEPENDS_OPTION "")
+				if(FIRST_PROFILE AND CMAKE_GENERATOR MATCHES "Ninja|Makefiles")
+					set(DEPENDS_OPTION DEPENDS)
+				endif()
+
 				_bgfx_shaderc_parse(
 					CLI #
 					${BIN2C_PART} #
-					${ARGS_TYPE} ${PLATFORM_I} WERROR "$<$<CONFIG:Debug,RelWithDebInfo>:DEBUG>"
+					${DEPENDS_OPTION} #
+					${ARGS_TYPE}
+					${PLATFORM_I}
+					WERROR
+					"$<$<CONFIG:Debug,RelWithDebInfo>:DEBUG>"
 					FILE ${SHADER_FILE_ABSOLUTE}
 					OUTPUT ${OUTPUT}
 					PROFILE ${PROFILE}
@@ -670,13 +686,19 @@ if(TARGET bgfx::shaderc)
 					${ARGS_OUTPUT_DIR}/${PROFILE_PATH_EXT}
 				)
 				list(APPEND COMMANDS COMMAND bgfx::shaderc ${CLI})
+				set(FIRST_PROFILE FALSE)
 			endforeach()
+
+			set(DEPFILE_ARG "")
+			if(CMAKE_GENERATOR MATCHES "Ninja|Makefiles" AND FIRST_OUTPUT)
+				set(DEPFILE_ARG DEPFILE "${FIRST_OUTPUT}.d")
+			endif()
 
 			add_custom_command(
 				OUTPUT ${OUTPUTS}
 				COMMAND ${MKDIR_COMMANDS} ${COMMANDS}
 				MAIN_DEPENDENCY ${SHADER_FILE_ABSOLUTE}
-				DEPENDS ${ARGS_VARYING_DEF}
+				DEPENDS ${ARGS_VARYING_DEF} ${ARGS_DEPENDS} ${DEPFILE_ARG}
 			)
 		endforeach()
 
