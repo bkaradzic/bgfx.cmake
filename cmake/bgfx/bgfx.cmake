@@ -15,13 +15,8 @@ if(NOT IS_DIRECTORY ${BGFX_DIR})
 endif()
 
 # Grab the bgfx source files
-file(
-	GLOB
-	BGFX_SOURCES
-	${BGFX_DIR}/src/*.cpp
-	${BGFX_DIR}/src/*.h
-	${BGFX_DIR}/include/bgfx/*.h
-	${BGFX_DIR}/include/bgfx/c99/*.h
+file(GLOB BGFX_SOURCES ${BGFX_DIR}/src/*.cpp ${BGFX_DIR}/src/*.h ${BGFX_DIR}/include/bgfx/*.h
+	 ${BGFX_DIR}/include/bgfx/c99/*.h
 )
 
 set(BGFX_AMALGAMATED_SOURCE ${BGFX_DIR}/src/amalgamated.cpp)
@@ -142,9 +137,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES iOS|tvOS)
 			"-framework OpenGLES -framework Metal -framework UIKit -framework CoreGraphics -framework QuartzCore -framework IOKit -framework CoreFoundation"
 	)
 	if(BGFX_CONFIG_VIDEO)
-		target_link_libraries(
-			bgfx PUBLIC "-framework VideoToolbox -framework CoreMedia -framework CoreVideo"
-		)
+		target_link_libraries(bgfx PUBLIC "-framework VideoToolbox -framework CoreMedia -framework CoreVideo")
 	endif()
 elseif(APPLE)
 	find_library(COCOA_LIBRARY Cocoa)
@@ -167,9 +160,7 @@ elseif(APPLE)
 		mark_as_advanced(VIDEOTOOLBOX_LIBRARY)
 		mark_as_advanced(COREMEDIA_LIBRARY)
 		mark_as_advanced(COREVIDEO_LIBRARY)
-		target_link_libraries(
-			bgfx PUBLIC ${VIDEOTOOLBOX_LIBRARY} ${COREMEDIA_LIBRARY} ${COREVIDEO_LIBRARY}
-		)
+		target_link_libraries(bgfx PUBLIC ${VIDEOTOOLBOX_LIBRARY} ${COREMEDIA_LIBRARY} ${COREVIDEO_LIBRARY})
 	endif()
 endif()
 
@@ -198,12 +189,8 @@ set_target_properties(bgfx PROPERTIES FOLDER "bgfx")
 # in Xcode we need to specify these files as objective-c++ (instead of renaming to .mm)
 if(XCODE)
 	set_source_files_properties(
-		${BGFX_DIR}/src/renderer_vk.cpp
-		${BGFX_DIR}/src/renderer_webgpu.cpp
-		${BGFX_DIR}/src/video_mtl.cpp
-		PROPERTIES
-			LANGUAGE OBJCXX
-			XCODE_EXPLICIT_FILE_TYPE sourcecode.cpp.objcpp
+		${BGFX_DIR}/src/renderer_vk.cpp ${BGFX_DIR}/src/renderer_webgpu.cpp ${BGFX_DIR}/src/video_mtl.cpp
+		PROPERTIES LANGUAGE OBJCXX XCODE_EXPLICIT_FILE_TYPE sourcecode.cpp.objcpp
 	)
 endif()
 

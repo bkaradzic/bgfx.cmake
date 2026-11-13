@@ -43,15 +43,9 @@ add_library(tint STATIC ${TINT_SOURCES})
 set_target_properties(tint PROPERTIES FOLDER "bgfx")
 
 target_include_directories(
-	tint
-	PUBLIC ${TINT_DIR}
-		   ${TINT_DIR}/src/tint
-	PRIVATE ${TINT_DIR}/third_party/protobuf/src
-			${TINT_DIR}/third_party/abseil-cpp
-			${SPIRV_TOOLS}
-			${SPIRV_TOOLS}/include
-			${SPIRV_TOOLS}/include/generated
-			${SPIRV_HEADERS}/include
+	tint PUBLIC ${TINT_DIR} ${TINT_DIR}/src/tint
+	PRIVATE ${TINT_DIR}/third_party/protobuf/src ${TINT_DIR}/third_party/abseil-cpp ${SPIRV_TOOLS}
+			${SPIRV_TOOLS}/include ${SPIRV_TOOLS}/include/generated ${SPIRV_HEADERS}/include
 )
 
 target_compile_definitions(
@@ -68,31 +62,13 @@ target_compile_definitions(
 )
 
 if(WIN32)
-	target_compile_definitions(
-		tint
-		PRIVATE TINT_BUILD_IS_LINUX=0
-				TINT_BUILD_IS_MAC=0
-				TINT_BUILD_IS_WIN=1
-	)
+	target_compile_definitions(tint PRIVATE TINT_BUILD_IS_LINUX=0 TINT_BUILD_IS_MAC=0 TINT_BUILD_IS_WIN=1)
 elseif(APPLE)
-	target_compile_definitions(
-		tint
-		PRIVATE TINT_BUILD_IS_LINUX=0
-				TINT_BUILD_IS_MAC=1
-				TINT_BUILD_IS_WIN=0
-	)
+	target_compile_definitions(tint PRIVATE TINT_BUILD_IS_LINUX=0 TINT_BUILD_IS_MAC=1 TINT_BUILD_IS_WIN=0)
 else()
-	target_compile_definitions(
-		tint
-		PRIVATE TINT_BUILD_IS_LINUX=1
-				TINT_BUILD_IS_MAC=0
-				TINT_BUILD_IS_WIN=0
-	)
+	target_compile_definitions(tint PRIVATE TINT_BUILD_IS_LINUX=1 TINT_BUILD_IS_MAC=0 TINT_BUILD_IS_WIN=0)
 endif()
 
 if(MSVC)
-	target_compile_options(
-		tint
-		PRIVATE "/Zc:preprocessor"
-	)
+	target_compile_options(tint PRIVATE "/Zc:preprocessor")
 endif()
