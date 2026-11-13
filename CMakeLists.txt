@@ -48,7 +48,10 @@ cmake_dependent_option(
 )
 cmake_dependent_option(BGFX_WITH_WAYLAND "Use Wayland backend." ON "CMAKE_SYSTEM_NAME STREQUAL Linux" OFF)
 option(BGFX_CUSTOM_TARGETS "Include convenience custom targets." ON)
-cmake_dependent_option(BGFX_CONFIG_MULTITHREADED "Build bgfx with multithreaded configuration" ON "NOT CMAKE_SYSTEM_NAME STREQUAL Emscripten" OFF)
+cmake_dependent_option(
+	BGFX_CONFIG_MULTITHREADED "Build bgfx with multithreaded configuration" ON
+	"NOT CMAKE_SYSTEM_NAME STREQUAL Emscripten" OFF
+)
 option(BGFX_CONFIG_RENDERER_WEBGPU "Enable the webgpu renderer" OFF)
 option(BGFX_CONFIG_DEBUG_ANNOTATION "Enable gfx debug annotations (default: on in debug)" OFF)
 option(BGFX_CONFIG_VIDEO "Enable hardware video decoder" ON)
@@ -134,19 +137,13 @@ endif()
 include(FetchContent)
 
 FetchContent_Declare(
-	bx
-	GIT_REPOSITORY https://github.com/bkaradzic/bx.git
-	GIT_TAG 57548da89a07771c5b0f8a6711149be70e08a329
+	bx GIT_REPOSITORY https://github.com/bkaradzic/bx.git GIT_TAG 49b3561cfbb7b323acb6d5acaae1a04ff15d19a4
 )
 FetchContent_Declare(
-	bimg
-	GIT_REPOSITORY https://github.com/bkaradzic/bimg.git
-	GIT_TAG 77bebb28e12956bfced82bb2cf7c19ac5735b6c8
+	bimg GIT_REPOSITORY https://github.com/bkaradzic/bimg.git GIT_TAG 22177183239e18d7af603e6915156371cc38d18d
 )
 FetchContent_Declare(
-	bgfx
-	GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git
-	GIT_TAG 77b6e842d02f61b7d2c904be7c9832ef78e48dbc
+	bgfx GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git GIT_TAG 300412ea7dce397e25a93f71bd9a143cfd86c1f9
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)
@@ -154,7 +151,10 @@ foreach(dep IN ITEMS bx bimg bgfx)
 	set(${dep}_in_tree "${CMAKE_CURRENT_SOURCE_DIR}/${dep}")
 	set(${dep}_in_tree_usable FALSE)
 	if(EXISTS "${${dep}_in_tree}/.git" AND NOT IS_DIRECTORY "${${dep}_in_tree}/.git")
-		message(WARNING "Ignoring leftover ${dep} submodule checkout at ${${dep}_in_tree}; delete it to silence this warning")
+		message(
+			WARNING
+				"Ignoring leftover ${dep} submodule checkout at ${${dep}_in_tree}; delete it to silence this warning"
+		)
 	elseif(EXISTS "${${dep}_in_tree}/include/${dep}/${dep}.h")
 		set(${dep}_in_tree_usable TRUE)
 	endif()

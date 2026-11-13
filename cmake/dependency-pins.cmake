@@ -5,9 +5,12 @@ set(pins "")
 foreach(dep IN ITEMS bx bimg bgfx)
 	string(TOUPPER "${dep}" upper)
 	# Read inline pins and the variable assignments used by older releases.
-	string(REGEX MATCHALL
-		"(set\\(${upper}_GIT_TAG|FetchContent_Declare\\([ \t\r\n]*${dep}[ \t\r\n]+[^)]*GIT_TAG)[ \t\r\n]+[^ \t\r\n)]+"
-		matches "${contents}"
+	string(
+		REGEX
+			MATCHALL
+			"(set\\(${upper}_GIT_TAG|FetchContent_Declare\\([ \t\r\n]*${dep}[ \t\r\n]+[^)]*GIT_TAG)[ \t\r\n]+[^ \t\r\n)]+"
+			matches
+			"${contents}"
 	)
 	list(LENGTH matches count)
 	if(NOT count EQUAL 1)

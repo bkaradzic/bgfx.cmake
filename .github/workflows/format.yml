@@ -15,9 +15,9 @@ jobs:
       - uses: actions/checkout@v7
       - name: Format CMake files
         id: cmake-format
-        uses: PuneetMatharu/cmake-format-lint-action@v1.0.6
+        uses: PuneetMatharu/cmake-format-lint-action@v1.0.8
         with:
-          args: --config-files .cmake-format.py --check
+          args: --config-files .cmake-format.py --check --
   # Run only if a PR and cmake-format has failed
   cmake-format-action-suggester:
     name: cmake-format fix suggester
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Format CMake files
         id: cmake-format
-        uses: PuneetMatharu/cmake-format-lint-action@v1.0.6
+        uses: PuneetMatharu/cmake-format-lint-action@v1.0.8
         with:
           args: --config-files .cmake-format.py --in-place
       - run: |

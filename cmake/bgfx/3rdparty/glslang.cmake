@@ -54,11 +54,6 @@ target_compile_definitions(
 set_target_properties(glslang PROPERTIES FOLDER "bgfx")
 
 target_include_directories(
-	glslang
-	PUBLIC ${GLSLANG}
-		   ${GLSLANG}/glslang/Public
-		   ${GLSLANG}/glslang/Include
-	PRIVATE ${GLSLANG}/..
-			${SPIRV_TOOLS}/include
-			${SPIRV_TOOLS}/source
+	glslang PUBLIC ${GLSLANG} ${GLSLANG}/glslang/Public ${GLSLANG}/glslang/Include
+	PRIVATE ${GLSLANG}/.. ${SPIRV_TOOLS}/include ${SPIRV_TOOLS}/source
 )

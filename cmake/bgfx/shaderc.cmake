@@ -31,11 +31,7 @@ target_link_libraries(
 			tint
 )
 
-target_include_directories(
-	shaderc
-	PRIVATE ${BGFX_DIR}/3rdparty/dawn
-			${BGFX_DIR}/3rdparty/dawn/src
-)
+target_include_directories(shaderc PRIVATE ${BGFX_DIR}/3rdparty/dawn ${BGFX_DIR}/3rdparty/dawn/src)
 
 set(DXCOMPILER_RUNTIME)
 if(UNIX
@@ -45,8 +41,7 @@ if(UNIX
 )
 	target_include_directories(
 		shaderc
-		PRIVATE ${BGFX_DIR}/3rdparty/directx-headers/include/directx
-				${BGFX_DIR}/3rdparty/directx-headers/include
+		PRIVATE ${BGFX_DIR}/3rdparty/directx-headers/include/directx ${BGFX_DIR}/3rdparty/directx-headers/include
 				${BGFX_DIR}/3rdparty/directx-headers/include/wsl/stubs
 	)
 	set(DXCOMPILER_RUNTIME ${BGFX_DIR}/tools/bin/linux/libdxcompiler.so)
@@ -84,8 +79,8 @@ endif()
 # to link, just install the needed binaries alongside shaderc.exe
 if(DXCOMPILER_RUNTIME)
 	add_custom_command(
-		TARGET shaderc POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DXCOMPILER_RUNTIME} $<TARGET_FILE_DIR:shaderc>
+		TARGET shaderc POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DXCOMPILER_RUNTIME}
+										  $<TARGET_FILE_DIR:shaderc>
 	)
 	if(BGFX_INSTALL)
 		install(FILES ${DXCOMPILER_RUNTIME} DESTINATION "${CMAKE_INSTALL_BINDIR}")

@@ -124,7 +124,9 @@ function(add_bgfx_shader FILE FOLDER)
 
 		file(RELATIVE_PATH PRINT_NAME ${BGFX_DIR}/examples ${FILE})
 		add_custom_command(
-			MAIN_DEPENDENCY ${FILE} DEPENDS ${SHADER_DEPENDENCIES} OUTPUT ${OUTPUT_FILES} ${COMMANDS}
+			MAIN_DEPENDENCY ${FILE}
+			DEPENDS ${SHADER_DEPENDENCIES}
+			OUTPUT ${OUTPUT_FILES} ${COMMANDS}
 			COMMENT "Compiling shader ${PRINT_NAME} for ${OUTPUTS_PRETTY}"
 		)
 	endif()
@@ -143,7 +145,15 @@ function(add_example ARG_NAME)
 			file(GLOB GLOB_SOURCES ${DIR}/*.mm)
 			list(APPEND SOURCES ${GLOB_SOURCES})
 		endif()
-		file(GLOB GLOB_SOURCES CONFIGURE_DEPENDS ${DIR}/*.c ${DIR}/*.cpp ${DIR}/*.h ${DIR}/*.sc)
+		file(
+			GLOB
+			GLOB_SOURCES
+			CONFIGURE_DEPENDS
+			${DIR}/*.c
+			${DIR}/*.cpp
+			${DIR}/*.h
+			${DIR}/*.sc
+		)
 		list(APPEND SOURCES ${GLOB_SOURCES})
 		file(GLOB GLOB_SHADERS CONFIGURE_DEPENDS ${DIR}/*.sc)
 		list(APPEND SHADERS ${GLOB_SHADERS})
@@ -188,44 +198,39 @@ function(add_example ARG_NAME)
 				# on iOS we need to build a bundle so have to copy the data rather than symlink
 				# and on windows we can't create symlinks
 				add_custom_command(
-					TARGET example-${ARG_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${BGFX_DIR}/examples/runtime/
-													   $<TARGET_FILE_DIR:example-${ARG_NAME}>
+					TARGET example-${ARG_NAME} POST_BUILD
+					COMMAND ${CMAKE_COMMAND} -E copy_directory ${BGFX_DIR}/examples/runtime/
+							$<TARGET_FILE_DIR:example-${ARG_NAME}>
 				)
 			else()
 				# For everything else symlink some folders into our output directory
 				add_custom_command(
-					TARGET example-${ARG_NAME}
-					POST_BUILD
+					TARGET example-${ARG_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E create_symlink ${BGFX_DIR}/examples/runtime/font
 							$<TARGET_FILE_DIR:example-${ARG_NAME}>/font
 				)
 				add_custom_command(
-					TARGET example-${ARG_NAME}
-					POST_BUILD
+					TARGET example-${ARG_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E create_symlink ${BGFX_DIR}/examples/runtime/images
 							$<TARGET_FILE_DIR:example-${ARG_NAME}>/images
 				)
 				add_custom_command(
-					TARGET example-${ARG_NAME}
-					POST_BUILD
+					TARGET example-${ARG_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E create_symlink ${BGFX_DIR}/examples/runtime/meshes
 							$<TARGET_FILE_DIR:example-${ARG_NAME}>/meshes
 				)
 				add_custom_command(
-					TARGET example-${ARG_NAME}
-					POST_BUILD
+					TARGET example-${ARG_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E create_symlink ${BGFX_DIR}/examples/runtime/shaders
 							$<TARGET_FILE_DIR:example-${ARG_NAME}>/shaders
 				)
 				add_custom_command(
-					TARGET example-${ARG_NAME}
-					POST_BUILD
+					TARGET example-${ARG_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E create_symlink ${BGFX_DIR}/examples/runtime/text
 							$<TARGET_FILE_DIR:example-${ARG_NAME}>/text
 				)
 				add_custom_command(
-					TARGET example-${ARG_NAME}
-					POST_BUILD
+					TARGET example-${ARG_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E create_symlink ${BGFX_DIR}/examples/runtime/textures
 							$<TARGET_FILE_DIR:example-${ARG_NAME}>/textures
 				)
