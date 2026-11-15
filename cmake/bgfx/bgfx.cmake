@@ -169,8 +169,14 @@ if(UNIX
    AND NOT EMSCRIPTEN
    AND NOT ANDROID
 )
-	find_package(X11 REQUIRED)
-	find_package(OpenGL REQUIRED)
+	find_package(X11)
+	find_package(OpenGL)
+	if(NOT X11_FOUND)
+		message(WARNING "X11 not found: the bgfx library target will not build (tools are unaffected)")
+	endif()
+	if(NOT OPENGL_FOUND)
+		message(WARNING "OpenGL not found: the bgfx library target will not build (tools are unaffected)")
+	endif()
 	#The following commented libraries are linked by bx
 	#find_package(Threads REQUIRED)
 	#find_library(LIBRT_LIBRARIES rt)
