@@ -19,7 +19,7 @@ if(BGFX_BUILD_TESTS)
 		GLOB
 		BX_TEST_SOURCES #
 		${BX_DIR}/3rdparty/catch/catch_amalgamated.cpp
-		${BX_DIR}/tests/*_test.cpp #
+		${BX_DIR}/tests/*-test.cpp #
 		${BX_DIR}/tests/*.h #
 		${BX_DIR}/tests/dbg.* #
 	)
@@ -32,8 +32,8 @@ if(BGFX_BUILD_TESTS)
 	file(
 		GLOB
 		BX_BENCH_SOURCES #
-		${BX_DIR}/tests/*_bench.cpp #
-		${BX_DIR}/tests/*_bench.h #
+		${BX_DIR}/tests/*-bench.cpp #
+		${BX_DIR}/tests/*-bench.h #
 		${BX_DIR}/tests/dbg.* #
 	)
 	add_executable(bx_bench ${BX_BENCH_SOURCES})
