@@ -137,13 +137,13 @@ endif()
 include(FetchContent)
 
 FetchContent_Declare(
-	bx GIT_REPOSITORY https://github.com/bkaradzic/bx.git GIT_TAG fcaf6fd4e6ee0bb31f670760dc77f6d6071a266f
+	bx GIT_REPOSITORY https://github.com/bkaradzic/bx.git GIT_TAG 150eb9fa89d4fdb13154f763517726bd560b67fa
 )
 FetchContent_Declare(
 	bimg GIT_REPOSITORY https://github.com/bkaradzic/bimg.git GIT_TAG b58f8e57f7bdf77631815467efcd3bca43a02d64
 )
 FetchContent_Declare(
-	bgfx GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git GIT_TAG e76ecedf90d667c5a5e2a07d65f98bcd39e78f28
+	bgfx GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git GIT_TAG 0db09f254150bbbb654fe9e845e24f4a1330a113
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)
