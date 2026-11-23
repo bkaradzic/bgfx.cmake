@@ -75,6 +75,7 @@ bimg_parse_option(BIMG_CONFIG_PARSE_GIF "Enable GIF parsing (empty uses bimg's d
 bimg_parse_option(BIMG_CONFIG_PARSE_HDR "Enable HDR parsing (empty uses bimg's default)")
 bimg_parse_option(BIMG_CONFIG_PARSE_HEIF "Enable HEIF parsing (empty uses bimg's default; requires external libheif)")
 bimg_parse_option(BIMG_CONFIG_PARSE_JPEG "Enable JPEG parsing (empty uses bimg's default)")
+bimg_parse_option(BIMG_CONFIG_PARSE_PFM "Enable PFM parsing (empty uses bimg's default)")
 bimg_parse_option(BIMG_CONFIG_PARSE_PIC "Enable PIC parsing (empty uses bimg's default)")
 bimg_parse_option(BIMG_CONFIG_PARSE_PNG "Enable PNG parsing (empty uses bimg's default)")
 bimg_parse_option(BIMG_CONFIG_PARSE_PNM "Enable PNM parsing (empty uses bimg's default)")
@@ -140,10 +141,10 @@ FetchContent_Declare(
 	bx GIT_REPOSITORY https://github.com/bkaradzic/bx.git GIT_TAG 150eb9fa89d4fdb13154f763517726bd560b67fa
 )
 FetchContent_Declare(
-	bimg GIT_REPOSITORY https://github.com/bkaradzic/bimg.git GIT_TAG b58f8e57f7bdf77631815467efcd3bca43a02d64
+	bimg GIT_REPOSITORY https://github.com/bkaradzic/bimg.git GIT_TAG 38ceda5c7778228f976f75900623fb5923b49107
 )
 FetchContent_Declare(
-	bgfx GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git GIT_TAG dc3ac75abc3e6d5f7f9d6dd8ac78496da59ee377
+	bgfx GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git GIT_TAG 93d3b7ca9c2331a606230e82a2ff2af903294012
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)
