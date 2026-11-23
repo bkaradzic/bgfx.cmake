@@ -144,7 +144,7 @@ FetchContent_Declare(
 	bimg GIT_REPOSITORY https://github.com/bkaradzic/bimg.git GIT_TAG 38ceda5c7778228f976f75900623fb5923b49107
 )
 FetchContent_Declare(
-	bgfx GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git GIT_TAG 93d3b7ca9c2331a606230e82a2ff2af903294012
+	bgfx GIT_REPOSITORY https://github.com/bkaradzic/bgfx.git GIT_TAG 9714e329d7b9eda40254964634d57010d1e80659
 )
 
 foreach(dep IN ITEMS bx bimg bgfx)
