@@ -184,7 +184,7 @@ if(UNIX
 	#find_package(Threads REQUIRED)
 	#find_library(LIBRT_LIBRARIES rt)
 	#find_library(LIBDL_LIBRARIES dl)
-	target_link_libraries(bgfx PUBLIC ${X11_LIBRARIES} ${OPENGL_LIBRARIES})
+	target_link_libraries(bgfx PUBLIC X11::X11 OpenGL::GL)
 endif()
 
 # Exclude glx context on non-unix
